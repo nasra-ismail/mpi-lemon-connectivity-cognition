@@ -4,7 +4,7 @@ title: "[Data/QC] "
 labels:
   - bug
 assignees:
-  - xamdoo
+  - 
 body:
   - type: checkboxes
     id: safety
