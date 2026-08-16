@@ -91,7 +91,6 @@ credentials must never be committed. See [data management](docs/DATA_MANAGEMENT.
 ## Task management
 
 - One GitHub issue represents one auditable task.
-- Every issue is assigned to [`@xamdoo`](https://github.com/xamdoo).
 - Titles use phase prefixes `[P0]` through `[P7]`.
 - A task is complete only when its definition-of-done checklist is satisfied and
   its code, notebook, figures, and pull request are linked.
