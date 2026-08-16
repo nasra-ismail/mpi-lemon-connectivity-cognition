@@ -1,0 +1,55 @@
+name: Data or quality-control concern
+description: Report an ID, merge, missingness, matrix, atlas, motion, or provenance problem
+title: "[Data/QC] "
+labels:
+  - bug
+assignees:
+  - 
+body:
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Required privacy check
+      options:
+        - label: I will describe the pattern with synthetic or aggregate information and will not upload participant-level source data.
+          required: true
+  - type: dropdown
+    id: concern
+    attributes:
+      label: Concern type
+      options:
+        - Participant ID or merge
+        - Missingness or impossible value
+        - Connectivity file structure or range
+        - Atlas label or ROI indexing
+        - MRI image, confound, or motion QC
+        - Data version, checksum, or provenance
+        - Unexpected sample-size change
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: Observed pattern
+      description: Use counts, ranges, hashes, or synthetic examples rather than participant records.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected pattern
+    validations:
+      required: true
+  - type: textarea
+    id: checks
+    attributes:
+      label: Checks already performed
+      value: "- [ ] Source version checked\n- [ ] Identifier types checked\n- [ ] Duplicate and missingness checks run\n- [ ] Relevant notebook/commit linked"
+  - type: textarea
+    id: impact
+    attributes:
+      label: Possible analytical impact
+      description: Explain whether participants, features, estimates, figures, or conclusions may change.
+    validations:
+      required: true

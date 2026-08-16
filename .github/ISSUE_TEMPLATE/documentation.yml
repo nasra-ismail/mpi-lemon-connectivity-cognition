@@ -1,0 +1,46 @@
+name: Documentation improvement
+description: Report unclear, incomplete, incorrect, or outdated documentation
+title: "[Docs] "
+labels:
+  - documentation
+assignees:
+  - 
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or file
+      placeholder: docs/ANALYSIS_PLAN.md or a URL
+    validations:
+      required: true
+  - type: dropdown
+    id: problem_type
+    attributes:
+      label: Problem type
+      options:
+        - Incorrect information
+        - Unclear explanation
+        - Missing instructions
+        - Broken link or formatting
+        - Beginner accessibility
+        - Citation or attribution
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or difficult to understand?
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Suggested improvement
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data safety
+      options:
+        - label: This report contains no participant-level or restricted data.
+          required: true

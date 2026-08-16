@@ -13,6 +13,9 @@ than speed.
 6. Open a pull request that links the issue and describes data and analysis decisions.
 7. Merge only when the issue's definition of done is satisfied.
 
+Use the complete [pull-request and review workflow](docs/CONTRIBUTION_WORKFLOW.md)
+before merging any change into `main`.
+
 ## Notebook rules
 
 - Use numbered filenames and run notebooks from top to bottom.

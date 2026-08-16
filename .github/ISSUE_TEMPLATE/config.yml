@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project roadmap
+    url: https://github.com/xamdoo/mpi-lemon-connectivity-cognition/blob/main/docs/ROADMAP.md
+    about: Check whether the work is already planned before opening a new issue.
+  - name: Data-management rules
+    url: https://github.com/xamdoo/mpi-lemon-connectivity-cognition/blob/main/docs/DATA_MANAGEMENT.md
+    about: Review what must not be uploaded before reporting a data concern.

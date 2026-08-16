@@ -1,0 +1,5 @@
+# Default reviewer for all repository changes
+* @xamdoo
+
+# Protect workflow, template, and ownership changes explicitly
+/.github/ @xamdoo
