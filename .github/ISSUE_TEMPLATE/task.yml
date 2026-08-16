@@ -1,10 +1,18 @@
 name: Analysis task
-description: Create one auditable learning or analysis task
+description: Propose one auditable learning, data, statistical, or modeling task
 title: "[P?] "
-labels: []
+labels:
+  - enhancement
 assignees:
   - xamdoo
 body:
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data-safety confirmation
+      options:
+        - label: I will not attach participant-level data, MRI files, connectivity matrices, credentials, or restricted files.
+          required: true
   - type: dropdown
     id: phase
     attributes:
@@ -39,6 +47,11 @@ body:
       label: Dependencies
       description: Link blocked-by or follow-up issues.
   - type: textarea
+    id: inputs_outputs
+    attributes:
+      label: Planned inputs and outputs
+      description: Name expected local inputs and permitted repository outputs without attaching source data.
+  - type: textarea
     id: tasks
     attributes:
       label: Task checklist
@@ -52,3 +65,8 @@ body:
       value: "- [ ] Code/notebook and outputs are linked\n- [ ] Quality checks pass\n- [ ] Interpretation and limitations are written"
     validations:
       required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and interpretation limits
+      description: Note leakage, motion, missingness, multiplicity, privacy, or causal-language risks.

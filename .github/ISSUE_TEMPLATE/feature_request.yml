@@ -1,0 +1,60 @@
+name: Feature or method proposal
+description: Propose a new function, workflow, visualization, or scientific method
+title: "[Proposal] "
+labels:
+  - enhancement
+assignees:
+  - xamdoo
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before proposing
+      options:
+        - label: I searched the roadmap and open issues for an existing task.
+          required: true
+        - label: I will not attach participant-level or restricted data.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the unmet scientific, learning, or engineering need.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Explain the smallest useful implementation.
+    validations:
+      required: true
+  - type: dropdown
+    id: analysis_status
+    attributes:
+      label: Proposed analysis status
+      options:
+        - Not an analysis change
+        - Sensitivity analysis
+        - Secondary analysis
+        - Exploratory analysis
+        - Proposed change to a frozen primary analysis
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or references
+      description: Link authoritative documentation, papers, or examples where relevant.
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks and alternatives
+      description: Consider scope, leakage, multiplicity, compute, privacy, and simpler alternatives.
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      value: "- [ ] Implementation is tested\n- [ ] Documentation is updated\n- [ ] Scientific impact and limitations are recorded"
+    validations:
+      required: true

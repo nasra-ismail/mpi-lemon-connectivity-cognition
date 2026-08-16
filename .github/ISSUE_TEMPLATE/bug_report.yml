@@ -1,0 +1,75 @@
+name: Bug report
+description: Report reproducible incorrect behavior in code, notebooks, CI, or documentation
+title: "[Bug] "
+labels:
+  - bug
+assignees:
+  - xamdoo
+body:
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data-safety confirmation
+      options:
+        - label: I removed participant data, credentials, private paths, and restricted files from this report and its attachments.
+          required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Environment or installation
+        - Data loading or participant IDs
+        - Connectivity matrix validation
+        - Network or graph analysis
+        - Statistics or machine learning
+        - Notebook or figure
+        - GitHub Actions or repository workflow
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the problem and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Minimal reproduction steps
+      value: "1.\n2.\n3."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include operating system, Python version, package/commit version, and command used.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs or screenshots
+      description: Paste the shortest useful error. Remove names, IDs, local private paths, tokens, and source data.
+      render: shell
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context or suspected cause

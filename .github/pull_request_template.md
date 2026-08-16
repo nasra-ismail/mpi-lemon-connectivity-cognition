@@ -1,29 +1,72 @@
-## What changed
+## Summary
 
-<!-- Summarize the code, notebook, documentation, and outputs. -->
+<!-- In 2–5 bullets, explain what changed and what the reviewer should focus on. -->
 
-## Why
+-
 
-<!-- Link the scientific or reproducibility reason and the issue. -->
+## Linked issue
 
 Closes #
 
-## Data and analysis decisions
+## Type of change
 
-- Data source/version:
-- Participants added or excluded:
-- New transformation or modeling decision:
-- Primary, secondary, or exploratory:
+- [ ] Bug fix
+- [ ] Analysis or statistical-method change
+- [ ] New feature or reusable function
+- [ ] Data/QC change
+- [ ] Documentation only
+- [ ] Refactor or maintenance with no intended result change
 
-## Validation
+## Scope for review
 
-- [ ] `python -m pytest -q`
-- [ ] `python -m ruff check .`
-- [ ] Notebooks restart and run top to bottom
-- [ ] No raw, restricted, credential, or oversized files are tracked
-- [ ] Figures/tables include labels, denominators, and uncertainty
-- [ ] README, analysis plan, and decision log are updated when needed
+<!-- Name the files, decisions, or outputs that need the closest review. -->
 
-## Limitations
+## Scientific and data impact
 
-<!-- State unresolved data, motion, design, or interpretation limitations. -->
+- Data source and version:
+- Participant inclusion/exclusion changed: No / Yes — explain below
+- Outcome, exposure, covariate, atlas, confound, or model changed: No / Yes — explain below
+- Analysis status: Primary / Secondary / Exploratory / Not applicable
+- Expected result change: None / Yes / Unknown
+
+## Evidence
+
+<!-- Link or attach non-sensitive tables, figures, screenshots, or logs. Never attach participant-level data. -->
+
+## Author self-review
+
+- [ ] The change is limited to the linked issue
+- [ ] I reviewed the complete **Files changed** tab
+- [ ] `python -m pytest -q` passes
+- [ ] `python -m ruff check .` passes
+- [ ] Modified notebooks restart and run from top to bottom
+- [ ] New reusable logic has tests
+- [ ] No raw MRI, behavioral, connectivity, participant-level, credential, or oversized files are tracked
+- [ ] Data versions, exclusions, random seeds, and analysis decisions are recorded where relevant
+- [ ] Figures and tables show labels, denominators, uncertainty, and reproducible source code
+- [ ] Documentation and the decision log are updated where relevant
+
+## Reviewer checklist
+
+<!-- The reviewer completes this section before approval. Use N/A where appropriate. -->
+
+- [ ] The change matches the linked issue and does not add unexplained scope
+- [ ] Code and notebook logic are understandable and reproducible
+- [ ] Data merges, exclusions, and dimensions have explicit checks
+- [ ] Statistical choices were not selected only because of favorable results
+- [ ] Cross-validation transformations remain inside training folds
+- [ ] Conclusions match the design, effect sizes, uncertainty, and limitations
+- [ ] No sensitive or prohibited data are exposed
+- [ ] Automated checks pass and review conversations are resolved
+
+## Limitations and follow-up
+
+<!-- State unresolved scientific, data, motion, implementation, or interpretation limitations. -->
+
+## Merge gate
+
+- [ ] Pull request is no longer a draft
+- [ ] Required checks pass
+- [ ] Required review is complete, when another reviewer is available
+- [ ] All review conversations are resolved
+- [ ] The branch is up to date with `main` if GitHub requires it
