@@ -1,5 +1,5 @@
 # Default reviewer for all repository changes
-* @xamdoo
+* @xamdoo @nasra-ismail
 
 # Protect workflow, template, and ownership changes explicitly
-/.github/ @xamdoo
+/.github/ @xamdoo @nasra-ismail
