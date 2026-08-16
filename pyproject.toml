@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lemon-connectivity"
+version = "0.1.0"
+description = "Reproducible MPI-LEMON connectivity, aging, and cognition analysis"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "Hamda Mouhoumed"}]
+dependencies = [
+  "matplotlib>=3.8",
+  "networkx>=3.2",
+  "nibabel>=5.2",
+  "nilearn>=0.10",
+  "numpy>=1.26",
+  "openpyxl>=3.1",
+  "pandas>=2.1",
+  "scikit-learn>=1.4",
+  "scipy>=1.12",
+  "seaborn>=0.13",
+  "statsmodels>=0.14",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ipykernel>=6.29",
+  "jupyterlab>=4.1",
+  "pytest>=8.0",
+  "ruff>=0.3",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"

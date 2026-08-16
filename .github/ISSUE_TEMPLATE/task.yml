@@ -1,0 +1,54 @@
+name: Analysis task
+description: Create one auditable learning or analysis task
+title: "[P?] "
+labels: []
+assignees:
+  - xamdoo
+body:
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Phase
+      options:
+        - P0 — Foundation
+        - P1 — Connectivity audit
+        - P2 — Atlas and segregation
+        - P3 — Behavior and sample
+        - P4 — Statistics and graphs
+        - P5 — Prediction
+        - P6 — fMRI pilot
+        - P7 — Portfolio
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: State the single result this task should produce.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this matters
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Link blocked-by or follow-up issues.
+  - type: textarea
+    id: tasks
+    attributes:
+      label: Task checklist
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      value: "- [ ] Code/notebook and outputs are linked\n- [ ] Quality checks pass\n- [ ] Interpretation and limitations are written"
+    validations:
+      required: true
