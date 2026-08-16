@@ -4,7 +4,7 @@ title: "[Bug] "
 labels:
   - bug
 assignees:
-  - xamdoo
+  - 
 body:
   - type: checkboxes
     id: safety
