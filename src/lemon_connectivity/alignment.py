@@ -151,7 +151,7 @@ def summarize_fcm_directory(inventory: pd.DataFrame) -> pd.Series:
     directory_mask = inventory["entry_type"].eq("directory")
 
     report = {
-        "total_entries": int(len(inventory)),
+        "total_entries": len(inventory),
         "regular_files": int(regular_file_mask.sum()),
         "non_system_txt_files": int(
             (non_system_file_mask & text_file_mask).sum()
@@ -202,7 +202,7 @@ def parse_fcm_filenames(
         expand=False,
     )
     if isinstance(extracted_ids, pd.DataFrame):
-        raise ValueError("filename_regex must contain exactly one capture group")
+        raise TypeError("filename_regex must contain exactly one capture group")
 
     extracted_ids = clean_participant_ids(extracted_ids)
     pattern_match_mask = candidate_mask & extracted_ids.notna()
@@ -280,8 +280,8 @@ def validate_fcm_id_uniqueness(parsed_inventory: pd.DataFrame) -> pd.Series:
 
     numeric_ids = parsed_ids.map(int)
     report = {
-        "valid_fcm_files": int(len(valid_matrix_rows)),
-        "parsed_matrix_ids": int(len(parsed_ids)),
+        "valid_fcm_files": len(valid_matrix_rows),
+        "parsed_matrix_ids": len(parsed_ids),
         "unique_parsed_matrix_ids": int(parsed_ids.nunique()),
         "duplicate_filename_ids": int(parsed_ids.duplicated().sum()),
         "canonical_collision_count": int(
@@ -328,13 +328,13 @@ def compare_participant_id_sets(
     matrix_set = set(matrix_canonical_ids.dropna().astype(str))
 
     report = {
-        "metadata_rows": int(len(cohort_metadata)),
+        "metadata_rows": len(cohort_metadata),
         "metadata_ids_not_canonicalized": int(metadata_canonical_ids.isna().sum()),
-        "unique_metadata_ids": int(len(metadata_set)),
-        "unique_matrix_ids": int(len(matrix_set)),
-        "metadata_without_matrices": int(len(metadata_set - matrix_set)),
-        "matrices_without_metadata": int(len(matrix_set - metadata_set)),
-        "matched_participants": int(len(metadata_set & matrix_set)),
+        "unique_metadata_ids": len(metadata_set),
+        "unique_matrix_ids": len(matrix_set),
+        "metadata_without_matrices": len(metadata_set - matrix_set),
+        "matrices_without_metadata": len(matrix_set - metadata_set),
+        "matched_participants": len(metadata_set & matrix_set),
     }
     return pd.Series(report, dtype="object")
 

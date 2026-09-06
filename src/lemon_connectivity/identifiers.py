@@ -130,7 +130,7 @@ def validate_raw_participant_ids(
     non_missing_ids = cleaned.loc[non_missing_mask]
 
     report = {
-        "total_ids": int(len(cleaned)),
+        "total_ids": len(cleaned),
         "missing_ids": int(cleaned.isna().sum()),
         "non_missing_ids": int(non_missing_mask.sum()),
         "all_non_missing_ids_numeric": bool(
@@ -165,7 +165,7 @@ def validate_canonical_participant_ids(
     non_missing_ids = cleaned.dropna()
 
     report = {
-        "total_canonical_ids": int(len(cleaned)),
+        "total_canonical_ids": len(cleaned),
         "valid_canonical_ids": int(valid_mask.sum()),
         "invalid_canonical_ids": int((cleaned.notna() & ~valid_mask).sum()),
         "missing_canonical_ids": int(cleaned.isna().sum()),
