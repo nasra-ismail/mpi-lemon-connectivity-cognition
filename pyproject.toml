@@ -26,10 +26,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "commitizen>=4.18",
   "ipykernel>=6.29",
   "jupyterlab>=4.1",
+  "pre-commit>=4.6",
   "pytest>=8.0",
-  "ruff>=0.3",
+  "ruff>=0.16",
 ]
 
 [tool.setuptools.packages.find]
@@ -38,6 +40,9 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
 
 [tool.ruff]
 line-length = 88
