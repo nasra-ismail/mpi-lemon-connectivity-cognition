@@ -29,8 +29,21 @@ def parse_subject_id(path: str | Path) -> str:
     return match.group(1)
 
 
-def _coerce_edge_types(raw: pd.DataFrame) -> pd.DataFrame:
-    """Return a copy with validated numeric edge-list data types."""
+def read_fcm_edge_list(path: str | Path) -> pd.DataFrame:
+    """Read one headerless, tab-separated FCM file without applying QC rules."""
+    try:
+        return pd.read_csv(path, sep="\t", header=None)
+    except (pd.errors.EmptyDataError, pd.errors.ParserError) as error:
+        raise ValueError(
+            "Could not parse FCM edge list as tab-separated text"
+        ) from error
+
+
+def normalize_fcm_edge_list(raw: pd.DataFrame) -> pd.DataFrame:
+    """Return an FCM edge list with validated numeric data types and names."""
+    if raw.shape[1] != len(EDGE_COLUMNS):
+        raise ValueError(f"Expected 3 columns, found {raw.shape[1]}")
+
     edges = raw.copy()
     edges.columns = EDGE_COLUMNS
 
@@ -40,10 +53,9 @@ def _coerce_edge_types(raw: pd.DataFrame) -> pd.DataFrame:
     except (TypeError, ValueError) as error:
         raise ValueError("Edge list contains non-numeric values") from error
 
-    if edges.isna().any().any():
-        raise ValueError("Edge list contains missing values")
-
     roi_values = edges[["roi_i", "roi_j"]].to_numpy(dtype=float)
+    if np.isnan(roi_values).any():
+        raise ValueError("ROI indices contain missing values")
     if not np.isfinite(roi_values).all():
         raise ValueError("ROI indices must be finite")
     if not np.equal(roi_values, np.floor(roi_values)).all():
@@ -203,7 +215,7 @@ def load_fcm_edge_list(path: str | Path, n_rois: int = 200) -> pd.DataFrame:
     if raw.shape[1] != 3:
         raise ValueError(f"Expected 3 columns, found {raw.shape[1]}")
 
-    edges = _coerce_edge_types(raw)
+    edges = normalize_fcm_edge_list(raw)
     qc_summary = summarize_fcm_edge_list(edges, n_rois=n_rois)
     failed_checks = qc_summary.loc[~qc_summary["passed"], "check"].tolist()
     if failed_checks:
