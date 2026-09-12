@@ -8,7 +8,9 @@ from lemon_connectivity.io import (
     edge_list_to_matrix,
     expected_edge_count,
     load_fcm_edge_list,
+    normalize_fcm_edge_list,
     parse_subject_id,
+    read_fcm_edge_list,
     summarize_fcm_edge_list,
 )
 
@@ -43,6 +45,19 @@ def test_parse_subject_id_rejects_unexpected_filename() -> None:
         parse_subject_id(Path("matrix_000001.csv"))
 
 
+def test_read_and_normalize_edge_list(tmp_path: Path) -> None:
+    path = tmp_path / "fcm_sub_000001.txt"
+    _write_edges(path, _complete_edges())
+
+    raw = read_fcm_edge_list(path)
+    edges = normalize_fcm_edge_list(raw)
+
+    assert raw.shape == (6, 3)
+    assert list(edges.columns) == ["roi_i", "roi_j", "correlation"]
+    assert edges["roi_i"].dtype.kind in "iu"
+    assert edges["correlation"].dtype.kind == "f"
+
+
 def test_load_summarize_and_reconstruct_complete_matrix(tmp_path: Path) -> None:
     path = tmp_path / "fcm_sub_000001.txt"
     _write_edges(path, _complete_edges())
@@ -51,7 +66,6 @@ def test_load_summarize_and_reconstruct_complete_matrix(tmp_path: Path) -> None:
     summary = summarize_fcm_edge_list(edges, n_rois=4)
     matrix = edge_list_to_matrix(edges, n_rois=4)
 
-    assert list(edges.columns) == ["roi_i", "roi_j", "correlation"]
     assert summary["passed"].all()
     assert matrix.shape == (4, 4)
     assert np.allclose(matrix, matrix.T)
@@ -149,7 +163,7 @@ def test_rejects_missing_values(tmp_path: Path) -> None:
     edges.loc[0, "correlation"] = np.nan
     _write_edges(path, edges)
 
-    with pytest.raises(ValueError, match="missing values"):
+    with pytest.raises(ValueError, match="Missing values"):
         load_fcm_edge_list(path, n_rois=4)
 
 
