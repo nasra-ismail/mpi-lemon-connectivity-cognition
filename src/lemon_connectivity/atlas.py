@@ -50,14 +50,19 @@ def parse_schaefer_label(label: str) -> dict[str, str]:
             f"Invalid Schaefer network identifier: {network_id}"
         )
 
-    # Preserve the complete parcel name, including compound names
-    parcel_name = "_".join(parts[2:])
+    # Extract the parcel components after the network identifier
+    parcel_components = parts[3:]
 
-    # Validate that the parcel name is present
-    if not parcel_name:
+    # Validate that the parcel name is present and non-empty
+    if not parcel_components or any(
+        not component.strip() for component in parcel_components
+    ):
         raise ValueError(
             f"Missing Schaefer parcel name: {label}"
         )
+
+    # Preserve the complete parcel name, including compound names
+    parcel_name = "_".join(parts[2:])
 
     # Return the validated atlas annotations
     return {
@@ -65,7 +70,6 @@ def parse_schaefer_label(label: str) -> dict[str, str]:
         "network_id": network_id,
         "parcel_name": parcel_name,
     }
-
 
 # Validate the complete Schaefer-200 atlas annotation table
 def validate_atlas_annotations(roi_lut):
