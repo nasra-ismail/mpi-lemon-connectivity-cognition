@@ -45,3 +45,9 @@ Record material choices before seeing the result they could affect.
 | 2026-08-16 | Begin with complete Yadav `FCM` edge lists | Avoid silently inheriting density thresholding | #1 |
 | 2026-08-16 | Use the LEMON-specific behavioral archive | The MPILMBB v3 archive is a complementary protocol | #1 |
 | 2026-08-16 | Treat graph and ML analyses as secondary | Keep one clear explanatory primary question | #1 |
+| 2026-09-26 | Propose `edge-policy-v1`: positive Fisher-z segregation; positive raw-correlation strength, modularity, and weighted efficiency; no self-connections or additional density threshold | Make metric-specific edge choices explicit before calculation; adoption occurs on merge of the #11 PR | [#11](https://github.com/nasra-ismail/mpi-lemon-connectivity-cognition/issues/11) |
+| 2026-09-26 | Specify pooled edge means and three segregation sensitivities (raw positive, Fisher signed, raw signed); graph sensitivities use positive Fisher weights | Expose sign and transformation dependence without selecting results by significance; keep fixed masks, zero-edge denominators, and failure records | [#11](https://github.com/nasra-ismail/mpi-lemon-connectivity-cognition/issues/11) |
+
+Full definitions, rationale, and implementation boundaries are recorded in the
+[analysis-plan edge policy](ANALYSIS_PLAN.md#edge-handling-policy--issue-11).
+
