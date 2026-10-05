@@ -8,7 +8,8 @@ Use one focused, numbered notebook per issue:
 03_single_matrix_qc.ipynb
 04_batch_matrix_qc.ipynb
 05_network_labels.ipynb
-06_network_segregation.ipynb
+06_network_ordering.ipynb
+07_network_segregation.ipynb
 ```
 
 Each notebook should state:
