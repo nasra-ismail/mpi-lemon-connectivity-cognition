@@ -25,7 +25,8 @@ model is explicitly exploratory.
 The whole-brain segregation definition is:
 
 ```text
-S = (mean within-network FC - mean between-network FC) / mean within-network FC
+S = (mean within-network FC - mean between-network FC)
+    / mean within-network FC
 ```
 
 The edge definitions, denominators, and alternatives below govern implementation
@@ -231,10 +232,10 @@ new notebook or metric computation is required for this documentation issue.
 
 ## Secondary explanatory analyses
 
-- younger versus older segregation difference adjusted for sex;
-- strength, modularity, global efficiency, and participation coefficient;
-- graph-feature associations with age group and LPS-2;
-- prespecified multiplicity control across each family of secondary tests.
+* younger versus older segregation difference adjusted for sex;
+* strength, modularity, global efficiency, and participation coefficient;
+* graph-feature associations with age group and LPS-2;
+* prespecified multiplicity control across each family of secondary tests.
 
 ## Prediction
 
@@ -246,11 +247,11 @@ correlation, uncertainty across repeats, and a full-pipeline permutation test.
 
 ## Diagnostics and sensitivity
 
-- participant and matrix QC before modeling;
-- residual, influence, nonlinearity, heteroskedasticity, and collinearity checks;
-- prespecified alternative segregation and graph-construction rules;
-- inclusion/exclusion and motion sensitivity where data permit;
-- complete reporting of null, negative, and unstable results.
+* participant and matrix QC before modeling;
+* residual, influence, nonlinearity, heteroskedasticity, and collinearity checks;
+* prespecified alternative segregation and graph-construction rules;
+* inclusion/exclusion and motion sensitivity where data permit;
+* complete reporting of null, negative, and unstable results.
 
 ## Interpretation limits
 
