@@ -22,21 +22,39 @@ model is explicitly exploratory.
 
 ## Primary network feature
 
-The provisional segregation definition is:
+The finalized whole-brain system segregation definition is:
 
 ```text
-S = (mean within-network FC - mean between-network FC) / mean within-network FC
+S = (mean within-network FC - mean between-network FC)
+    / mean within-network FC
 ```
 
-The diagonal is excluded. Fisher transformation and negative-edge handling must be
-fixed in issue #11, with reasonable alternatives treated as sensitivity analyses.
+The connectivity preprocessing follows the policy finalized in issue #11:
+
+* diagonal entries are excluded;
+* off-diagonal Pearson correlations are transformed using the Fisher \(z\)-transformation;
+* negative Fisher \(z\)-values are replaced with zero;
+* zeroed values remain included in the corresponding network means; and
+* each unique undirected edge contributes equally to the pooled within-network and between-network means.
+
+Within-network and between-network edges are defined from the validated Schaefer-200 canonical network assignments using the upper triangle of the connectivity matrix. The two edge groups are mutually exclusive and together cover all unique ROI-to-ROI connections.
+
+If the pooled within-network mean is zero,
+
+$$
+W = 0
+$$
+
+the system segregation score is undefined. Such cases remain in the participant-level analysis ledger with an explicit calculation status and reason rather than being assigned an arbitrary value.
+
+The primary implementation is recorded as `edge-policy-v1` with segregation definition `seg_z_positive`.
 
 ## Secondary explanatory analyses
 
-- younger versus older segregation difference adjusted for sex;
-- strength, modularity, global efficiency, and participation coefficient;
-- graph-feature associations with age group and LPS-2;
-- prespecified multiplicity control across each family of secondary tests.
+* younger versus older segregation difference adjusted for sex;
+* strength, modularity, global efficiency, and participation coefficient;
+* graph-feature associations with age group and LPS-2;
+* prespecified multiplicity control across each family of secondary tests.
 
 ## Prediction
 
@@ -48,11 +66,11 @@ correlation, uncertainty across repeats, and a full-pipeline permutation test.
 
 ## Diagnostics and sensitivity
 
-- participant and matrix QC before modeling;
-- residual, influence, nonlinearity, heteroskedasticity, and collinearity checks;
-- prespecified alternative segregation and graph-construction rules;
-- inclusion/exclusion and motion sensitivity where data permit;
-- complete reporting of null, negative, and unstable results.
+* participant and matrix QC before modeling;
+* residual, influence, nonlinearity, heteroskedasticity, and collinearity checks;
+* prespecified alternative segregation and graph-construction rules;
+* inclusion/exclusion and motion sensitivity where data permit;
+* complete reporting of null, negative, and unstable results.
 
 ## Interpretation limits
 
