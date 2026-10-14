@@ -574,24 +574,20 @@ def test_calculate_network_means_rejects_incomplete_mask_partition():
         )
 
 
-# Test that zero within-network mean is rejected while
-# very small positive values remain valid
-def test_zero_within_mean():
+@pytest.mark.parametrize(
+    "within_mean", [-1e-3, 0.0, 1e-13, np.nextafter(1e-12, 0.0), 1e-12]
+)
+def test_segregation_rejects_baselines_at_or_below_policy_guard(within_mean):
     with pytest.raises(
         ValueError,
-        match="within_mean is zero",
+        match="within_mean",
     ):
-        calculate_system_segregation(
-            0.0,
-            0.0,
-        )
+        calculate_system_segregation(within_mean, 0.0)
 
-    small_positive_segregation = calculate_system_segregation(
-        1e-13,
-        0.0,
-    )
 
-    assert np.isclose(small_positive_segregation, 1.0)
+@pytest.mark.parametrize("within_mean", [np.nextafter(1e-12, np.inf), 1e-11, 0.2])
+def test_segregation_accepts_baselines_above_policy_guard(within_mean):
+    assert calculate_system_segregation(within_mean, 0.0) == 1.0
 
 
 # Test that segregation is unchanged when the matrix and labels are reordered together
@@ -728,6 +724,41 @@ def test_calculate_network_statistics():
     assert np.isclose(result["system_segregation"], 0.50)
     assert result["within_edge_count"] == 2
     assert result["between_edge_count"] == 4
+    assert result["calculation_status"] == "calculated"
+    assert result["calculation_reason"] == ""
+
+
+@pytest.mark.parametrize(
+    ("within_z", "expected_mean", "expected_status"),
+    [
+        (-0.2, 0.0, "undefined_within_mean_zero"),
+        (1e-13, 1e-13, "undefined_within_mean_near_zero"),
+    ],
+)
+def test_statistics_preserve_means_when_segregation_is_undefined(
+    within_z, expected_mean, expected_status
+):
+    labels = np.array(["A", "A", "B", "B"])
+    z_values = np.where(labels[:, None] == labels[None, :], within_z, 0.1)
+    matrix = np.tanh(z_values)
+    np.fill_diagonal(matrix, 1.0)
+
+    result = calculate_network_statistics(matrix, labels)
+
+    assert result["within_mean"] == pytest.approx(expected_mean, abs=1e-16)
+    assert result["between_mean"] == pytest.approx(0.1)
+    assert np.isnan(result["system_segregation"])
+    assert result["calculation_status"] == expected_status
+    assert result["calculation_reason"]
+    assert result["within_edge_count"] == 2
+    assert result["between_edge_count"] == 4
+
+
+def test_statistics_still_reject_invalid_correlations():
+    matrix = np.eye(4)
+    matrix[0, 1] = matrix[1, 0] = 1.0
+    with pytest.raises(ValueError, match="strictly between -1 and 1"):
+        calculate_network_statistics(matrix, ["A", "A", "B", "B"])
 
 
 # Test that zeroed negative edges remain included in the network mean

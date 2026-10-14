@@ -5,6 +5,16 @@ from collections.abc import Sequence
 import numpy as np
 import pandas as pd
 
+SEGREGATION_MIN_WITHIN_MEAN = 1e-12
+
+
+class UndefinedSegregationError(ValueError):
+    """A finite within-network mean fails the edge-policy-v1 denominator rule."""
+
+    def __init__(self, message: str, calculation_status: str) -> None:
+        super().__init__(message)
+        self.calculation_status = calculation_status
+
 
 # Create a deterministic ROI permutation grouped by canonical network
 def create_network_permutation(
@@ -255,17 +265,32 @@ def calculate_system_segregation(
     within_mean: float,
     between_mean: float,
 ) -> float:
-    """Calculate system segregation as (within - between) / within."""
+    """Calculate (within - between) / within when within_mean exceeds 1e-12.
+
+    Raise UndefinedSegregationError for finite baselines at or below the
+    edge-policy-v1 guard. Non-finite means remain invalid inputs.
+    """
     if not np.isfinite(within_mean) or not np.isfinite(between_mean):
         raise ValueError("Network means must be finite")
 
     if within_mean < 0:
-        raise ValueError(
-            "within_mean cannot be negative after connectivity preprocessing"
+        raise UndefinedSegregationError(
+            "within_mean cannot be negative after connectivity preprocessing",
+            "undefined_within_mean_negative",
         )
 
     if within_mean == 0:
-        raise ValueError("System segregation is undefined because within_mean is zero")
+        raise UndefinedSegregationError(
+            "System segregation is undefined because within_mean is zero",
+            "undefined_within_mean_zero",
+        )
+
+    if within_mean <= SEGREGATION_MIN_WITHIN_MEAN:
+        raise UndefinedSegregationError(
+            "System segregation is undefined because within_mean is at or below "
+            f"{SEGREGATION_MIN_WITHIN_MEAN:g}",
+            "undefined_within_mean_near_zero",
+        )
 
     return float((within_mean - between_mean) / within_mean)
 
@@ -274,8 +299,13 @@ def calculate_system_segregation(
 def calculate_network_statistics(
     matrix: np.ndarray,
     network_labels: Sequence[str],
-) -> dict[str, float | int]:
-    """Calculate network-segregation statistics for one participant."""
+) -> dict[str, float | int | str]:
+    """Return means, edge counts, segregation, and calculation status.
+
+    If the denominator fails the edge-policy-v1 guard, preserve the computed
+    means and counts and return a NaN score with an explicit status and reason.
+    Invalid matrices or network labels still raise an error.
+    """
     within_mask, between_mask = create_network_masks(network_labels)
     processed_matrix = preprocess_connectivity_matrix(matrix)
 
@@ -285,10 +315,18 @@ def calculate_network_statistics(
         between_mask,
     )
 
-    system_segregation = calculate_system_segregation(
-        within_mean,
-        between_mean,
-    )
+    try:
+        system_segregation = calculate_system_segregation(
+            within_mean,
+            between_mean,
+        )
+    except UndefinedSegregationError as error:
+        system_segregation = np.nan
+        calculation_status = error.calculation_status
+        calculation_reason = str(error)
+    else:
+        calculation_status = "calculated"
+        calculation_reason = ""
 
     return {
         "within_mean": within_mean,
@@ -296,4 +334,7 @@ def calculate_network_statistics(
         "system_segregation": system_segregation,
         "within_edge_count": int(within_mask.sum()),
         "between_edge_count": int(between_mask.sum()),
+        "calculation_status": calculation_status,
+        "calculation_reason": calculation_reason,
     }
+
