@@ -10,6 +10,12 @@ Use one focused, numbered notebook per issue:
 05_network_labels.ipynb
 06_network_ordering.ipynb
 07_network_segregation.ipynb
+08_age_group_comparison.ipynb
+09_segregation_sensitivity.ipynb
+10_behavioral_inventory.ipynb
+11_outcome_covariates.ipynb
+12_participant_merge.ipynb
+13_missingness_audit.ipynb
 ```
 
 Each notebook should state:
