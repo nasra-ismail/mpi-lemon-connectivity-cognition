@@ -6,6 +6,12 @@ import numpy as np
 import pandas as pd
 
 SEGREGATION_MIN_WITHIN_MEAN = 1e-12
+SEGREGATION_DEFINITIONS = (
+    "seg_z_positive",
+    "seg_r_positive",
+    "seg_z_signed",
+    "seg_r_signed",
+)
 
 
 class UndefinedSegregationError(ValueError):
@@ -167,9 +173,28 @@ def create_network_masks(
     return within_mask, between_mask
 
 
-# Apply the finalized Fisher transformation and negative-edge handling
-def preprocess_connectivity_matrix(matrix: np.ndarray) -> np.ndarray:
-    """Apply Fisher z-transformation and replace negative values with zero."""
+# Apply one prespecified definition to an original signed correlation matrix
+def preprocess_connectivity_matrix(
+    matrix: np.ndarray,
+    *,
+    definition: str = "seg_z_positive",
+) -> np.ndarray:
+    """Return a new working matrix under edge-policy-v1.
+
+    ``seg_z_*`` applies Fisher z once to off-diagonal correlations;
+    ``seg_r_*`` retains raw correlations. ``*_positive`` replaces negatives
+    with zero; ``*_signed`` retains their signs. Every definition sets the
+    working diagonal to zero. Pass the original signed R, never a previously
+    transformed matrix. The default preserves the primary analysis behavior.
+
+    Fisher definitions reject off-diagonal endpoints +/-1 before truncation.
+    Raw definitions allow these endpoints. Neither clips out-of-range input.
+    """
+    if not isinstance(definition, str):
+        raise TypeError("definition must be a string")
+    if definition not in SEGREGATION_DEFINITIONS:
+        raise ValueError(f"Unknown segregation definition: {definition}")
+
     matrix = np.asarray(matrix, dtype=float)
 
     if matrix.ndim != 2:
@@ -184,15 +209,21 @@ def preprocess_connectivity_matrix(matrix: np.ndarray) -> np.ndarray:
     off_diagonal = ~np.eye(matrix.shape[0], dtype=bool)
     off_diagonal_values = matrix[off_diagonal]
 
-    if np.any(np.abs(off_diagonal_values) >= 1):
+    use_fisher = definition in {"seg_z_positive", "seg_z_signed"}
+    if use_fisher and np.any(np.abs(off_diagonal_values) >= 1):
         raise ValueError(
             "Off-diagonal connectivity values must be strictly between -1 and 1"
         )
+    if not use_fisher and np.any(np.abs(off_diagonal_values) > 1):
+        raise ValueError("Off-diagonal raw correlations must be between -1 and 1")
 
     processed_matrix = matrix.copy()
 
-    processed_off_diagonal = np.arctanh(off_diagonal_values)
-    processed_off_diagonal[processed_off_diagonal < 0] = 0
+    processed_off_diagonal = (
+        np.arctanh(off_diagonal_values) if use_fisher else off_diagonal_values.copy()
+    )
+    if definition in {"seg_z_positive", "seg_r_positive"}:
+        processed_off_diagonal[processed_off_diagonal < 0] = 0
 
     processed_matrix[off_diagonal] = processed_off_diagonal
 
@@ -275,7 +306,7 @@ def calculate_system_segregation(
 
     if within_mean < 0:
         raise UndefinedSegregationError(
-            "within_mean cannot be negative after connectivity preprocessing",
+            "System segregation is undefined because within_mean is negative",
             "undefined_within_mean_negative",
         )
 
@@ -299,15 +330,19 @@ def calculate_system_segregation(
 def calculate_network_statistics(
     matrix: np.ndarray,
     network_labels: Sequence[str],
+    *,
+    definition: str = "seg_z_positive",
 ) -> dict[str, float | int | str]:
     """Return means, edge counts, segregation, and calculation status.
 
     If the denominator fails the edge-policy-v1 guard, preserve the computed
     means and counts and return a NaN score with an explicit status and reason.
-    Invalid matrices or network labels still raise an error.
+    Invalid matrices or network labels still raise an error. All definitions
+    use the same label-based masks and pooled means, including zero weights.
+    Pass the original signed correlation matrix for each definition.
     """
     within_mask, between_mask = create_network_masks(network_labels)
-    processed_matrix = preprocess_connectivity_matrix(matrix)
+    processed_matrix = preprocess_connectivity_matrix(matrix, definition=definition)
 
     within_mean, between_mean = calculate_network_means(
         processed_matrix,
@@ -337,4 +372,3 @@ def calculate_network_statistics(
         "calculation_status": calculation_status,
         "calculation_reason": calculation_reason,
     }
-
