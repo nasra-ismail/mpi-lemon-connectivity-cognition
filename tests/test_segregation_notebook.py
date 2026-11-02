@@ -1,5 +1,3 @@
-"""Regression checks for issue #58 using the notebook's actual source cells."""
-
 import json
 from pathlib import Path
 
